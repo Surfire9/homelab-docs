@@ -1,0 +1,64 @@
+# Home Assistant OS
+
+## Overview
+**Purpose:** Centralized home automation platform used for device control, monitoring, automations, integrations, dashboards, and smart-home orchestration within the home lab.  
+**Status:** 🟢 Production  
+**Owner:** Surfire9  
+**Created:** 2025-11-15  
+**Last Updated:** 2025-11-15  
+
+## Quick Facts
+- **Type:** Virtual Appliance / Automation Platform  
+- **Access URL:** http://homeassistant.lab.local:8123  
+- **Dependencies:** Proxmox VM host, local storage, network access, integrations (Tailscale, Zigbee/Z-Wave in future)  
+- **Backup Schedule:** Daily snapshot via Proxmox + HAOS built-in backups  
+- **Monitoring:** To be added (Uptime Kuma planned)  
+
+## Architecture
+
+### Deployment
+- **Platform:** Proxmox VM  
+- **Host:** proxmox.lab.local  
+- **Resources:**
+  - CPU: 2 cores  
+  - RAM: 4GB  
+  - Storage: 32GB (local-lvm)  
+
+### Network
+- **IP Address:** Assigned via DHCP (reserved): 192.168.1.x  
+- **Ports:**  
+  - 8123/tcp – Home Assistant Web UI  
+  - 4357/tcp – Supervisor access  
+  - Additional ports opened dynamically for integrations  
+- **VLAN:** Currently on primary LAN (future segmentation planned)  
+- **Firewall Zone:** Internal  
+
+### Storage
+- **Data Location:** Internal HAOS disk image handled by Supervisor  
+- **Backup Location:** Home Assistant Snapshots + Proxmox Backup snapshots  
+- **Size:** ~5GB used / 32GB allocated  
+
+## Access & Credentials
+- **Admin Portal:** http://homeassistant.lab.local:8123  
+- **Credentials:** Stored in Bitwarden under “HomeLab / HomeAssistantOS”  
+- **API Keys:** Generated per-integration and stored in Vault  
+- **SSH Access:** Disabled on HAOS (managed via HAOS Supervisor SSH Add-on if installed)  
+
+## Dependencies
+1. **Proxmox Virtualization Layer** – proxmox.lab.local  
+2. **Local Network Router / DHCP** – Provides static reservation  
+3. **Future Integrations**  
+   - Tailscale  
+   - Zigbee/Z-Wave controller  
+   - MQTT broker  
+   - Camera NVR platform  
+
+## Installation
+
+### Prerequisites
+```bash
+# Ensure Proxmox host has internet access
+apt update && apt install curl
+
+# Confirm correct storage target
+pvesm status
