@@ -134,7 +134,61 @@ Deploy pfSense as the primary firewall on dedicated hardware (or virtualized wit
 - ISP Router
 - Untangle / Sophos XG
 ---
-## ADR-004: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
+
+# Architecture Decision Records
+
+## ADR-004: Deploy Linux Mint 22.2 as Admin Workstation for Firewall and Security Console Access (2025-10-28)
+
+### Status
+Accepted
+
+### Context
+- A dedicated and secure administrative workstation is required for managing the pfSense firewall, Proxmox hosts, Wazuh Dashboard, and other critical lab services.
+- Using a general-purpose Windows machine for administrative tasks increases risk and mixes daily-use activities with privileged actions.
+- Linux Mint 22.2 offers a stable, lightweight, user-friendly environment with long-term support, making it suitable for secure administrative operations.
+- The workstation must support SSH, VPN, browser-based dashboards, and secure credential storage.
+
+### Options Considered
+- Deploy Linux Mint 22.2 as a dedicated admin workstation
+- Use Windows 10/11 as the admin machine
+- Use Ubuntu Desktop / Fedora Workstation
+- Use a browser-based Chromebook or lightweight Linux distro
+
+### Decision
+Deploy **Linux Mint 22.2** as the dedicated admin workstation for secure access to pfSense, Wazuh, Proxmox, and related infrastructure dashboards.
+
+### Rationale
+**Pros:**
+- Stable, long-term support and user-friendly environment
+- Low resource usage; ideal for admin utility machines
+- Strong built-in support for SSH, OpenVPN, WireGuard, and administrative tooling
+- Compatible with browser-based consoles (pfSense, Wazuh, Proxmox GUI)
+- Reduced attack surface compared to daily-use Windows environments
+- Cinnamon desktop provides familiar UI with minimal overhead
+- Easy to maintain and update with predictable package management (APT)
+
+**Cons:**
+- Requires familiarity with Linux administration
+- Some commercial tools are Windows-only (though not needed for this role)
+- Hardware driver compatibility depends on Mint’s Ubuntu base
+- Must ensure secure configuration (updates, firewall, no unnecessary apps)
+
+### Consequences
+- Stronger separation between daily personal computing and privileged administrative tasks
+- More secure access pathway to core security infrastructure (firewall + Wazuh)
+- Improved operational hygiene by isolating credentials, certificates, and admin tools
+- Consistent, predictable environment for SSH, VPN, and browser-based management
+- Slight overhead maintaining an additional workstation or VM
+
+### Alternatives Considered
+- Windows Admin Workstation
+- Ubuntu Desktop or Fedora Workstation
+- Chromebook or thin client with browser-only access
+- Headless admin approach via SSH-only from various machines
+
+---
+
+## ADR-###: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
 Accepted
