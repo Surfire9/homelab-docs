@@ -1,45 +1,63 @@
 # Architecture Decision Records
 
-## ADR-001: Use Proxmox for Virtualization (2025-10-15)
+---
+
+## ADR-001: Deploy Proxmox VE as Primary Virtualization Platform (2025-10-15)
 
 ### Status
 Accepted
 
 ### Context
-Need a hypervisor platform for homelab. Options considered:
+- The home lab requires a robust, flexible virtualization platform capable of running multiple servers and security tools (Ubuntu Server, pfSense, Wazuh, TrueNAS clients, Docker hosts, etc.).
+- The platform must support both full virtual machines and lightweight containers.
+- Needs to integrate cleanly with ZFS, VLAN networking, snapshots, templates, and potential clustering for future expansion.
+- Alternative hypervisors (ESXi, XCP-ng, KVM/libvirt) were considered but have limitations for homelab use cases.
+
+### Options Considered
 - Proxmox VE
 - VMware ESXi
 - XCP-ng
-- KVM/libvirt
+- KVM / libvirt
+- Running services directly on bare metal
 
 ### Decision
-Selected Proxmox VE for virtualization platform.
+Deploy **Proxmox VE** as the primary hypervisor for the entire home lab and host all core virtual machines, containers, and infrastructure services.
 
 ### Rationale
 **Pros:**
-- Open source and free
-- Built-in clustering and HA
-- Excellent web UI
-- Strong community support
-- Supports both VMs and containers (LXC)
-- ZFS support for storage
+- Open-source and free to use (subscription optional)
+- Supports both **VMs** and **LXC containers** within the same platform
+- Built-in **ZFS support** with native snapshots, replication, and dataset integration
+- Excellent web interface with comprehensive management tools
+- Strong community documentation and long-term reliability
+- Easy future expansion into multi-node clusters with shared storage
+- Seamless integration with VLAN-aware bridges and pfSense firewall design
+- Template-based VM deployment simplifies provisioning
 
 **Cons:**
-- Steeper learning curve than ESXi
-- Smaller ecosystem than VMware
+- Steeper learning curve than ESXi for new users
+- Smaller enterprise ecosystem compared to VMware
+- LXC containers require attention to template and compatibility constraints
+- Advanced clustering requires additional network/storage planning
 
 ### Consequences
-- All VMs will be managed through Proxmox
-- Need to learn Proxmox-specific tooling
-- Can leverage ZFS for storage efficiency
-- Easy to expand cluster in future
+- All core infrastructure (Ubuntu servers, pfSense, Wazuh, Docker hosts, monitoring servers) will run on Proxmox
+- Simplified VM lifecycle management through snapshots, backups, cloning, and templates
+- ZFS integration enables reliable storage, snapshots, and easy rollback
+- Consistent virtualization layer for future expansion (HA, clustering, replication)
+- Requires ongoing familiarity with Proxmox-specific workflows and networking concepts
 
 ### Alternatives Considered
-- **ESXi:** Better enterprise support but limited free version
-- **XCP-ng:** Similar to Proxmox but smaller community
+- **VMware ESXi:** Strong enterprise support but heavily limited in the free version and poor fit for homelab expansion
+- **XCP-ng:** Capable but smaller community, less flexible UI, and fewer built-in features
+- **KVM/libvirt (raw):** Very powerful but requires significantly more manual configuration and lacks Proxmox’s unified management interface
+- **Bare Metal Services:** No centralized VM management, harder to scale, and limits isolation for security testing
 
 ---
+
 # Architecture Decision Records
+
+---
 
 ## ADR-002: Add Ubuntu Server to Home Lab Infrastructure (2025-10-27)
 
@@ -84,7 +102,10 @@ Deploy Ubuntu Server LTS as a VM within Proxmox with allocated resources based o
 - Bare-metal deployment for performance
 
 ---
+
 # Architecture Decision Records
+
+---
 
 ## ADR-003: Deploy pfSense as Primary Firewall & Network Segmentation Platform (2025-10-28)
 
@@ -133,9 +154,12 @@ Deploy pfSense as the primary firewall on dedicated hardware (or virtualized wit
 - OpenWRT
 - ISP Router
 - Untangle / Sophos XG
+
 ---
 
 # Architecture Decision Records
+
+---
 
 ## ADR-004: Deploy Linux Mint 22.2 as Admin Workstation for Firewall and Security Console Access (2025-10-28)
 
@@ -189,6 +213,8 @@ Deploy **Linux Mint 22.2** as the dedicated admin workstation for secure access 
 ---
 
 # Architecture Decision Records
+
+---
 
 ## ADR-005: Deploy TrueNAS for Centralized Storage, Backups, and ZFS-Based Data Integrity (2025-11-12)
 
@@ -244,6 +270,8 @@ Deploy **TrueNAS** as the central storage and backup appliance using ZFS with re
 ---
 
 # Architecture Decision Records
+
+---
 
 ## ADR-006: Deploy Wazuh as Centralized Security Monitoring and SIEM Platform (YYYY-MM-DD)
 
