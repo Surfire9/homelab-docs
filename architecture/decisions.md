@@ -188,6 +188,61 @@ Deploy **Linux Mint 22.2** as the dedicated admin workstation for secure access 
 
 ---
 
+# Architecture Decision Records
+
+## ADR-005: Deploy TrueNAS for Centralized Storage, Backups, and ZFS-Based Data Integrity (2025-11-12)
+
+### Status
+Accepted
+
+### Context
+- The home lab requires a reliable and centralized storage solution capable of hosting VMs, backups, media libraries, configuration archives, and security/log data.
+- Current ad-hoc storage (external drives, local VM disks, cloud free tiers) is fragmented, difficult to manage, and lacks enterprise-grade protection.
+- A storage platform with snapshots, data integrity checks, redundancy, and network protocols (NFS, SMB, iSCSI) is needed.
+- ZFS provides end-to-end data integrity, snapshots, replication, and self-healing capabilities ideal for home lab and security-focused environments.
+
+### Options Considered
+- Deploy TrueNAS (CORE or SCALE)
+- Use Unraid
+- Use plain Linux with ZFS on Ubuntu/Debian
+- Use Windows Server with Storage Spaces
+- Continue with local disks inside Proxmox VMs
+
+### Decision
+Deploy **TrueNAS** as the central storage and backup appliance using ZFS with redundancy, snapshots, and network shares for the home lab.
+
+### Rationale
+**Pros:**
+- ZFS provides enterprise-grade data integrity, checksums, and self-healing
+- Native support for SMB, NFS, and iSCSI for Proxmox, Linux, and Windows systems
+- Provides snapshots, replication, and dataset-level permissions
+- Highly stable and well-documented with strong community and enterprise support
+- TrueNAS SCALE offers Linux-based flexibility with containers and Kubernetes
+- Easy integration into Proxmox as shared storage or backup target
+- Web interface makes management intuitive without sacrificing advanced features
+
+**Cons:**
+- Requires more RAM (ZFS prefers 16 GB or more for optimal performance)
+- Must follow strict ZFS disk management rules (no mixing sizes, no expansion of RAIDZ vdevs)
+- Heavier than simple NAS solutions like OpenMediaVault
+- Virtualized deployments require careful configuration to preserve ZFS integrity
+
+### Consequences
+- Reliable and unified storage system for the entire home lab
+- Strong data-protection model with snapshots, replication, and integrity checks
+- Simplifies Proxmox storage management and offloads VM disk storage
+- Provides a single source for backups, media, logs, and ISO repositories
+- Hardware requirements increase (RAM, CPU, proper HBAs or SATA passthrough)
+- Long-term maintainability improves but requires thoughtful pool design
+
+### Alternatives Considered
+- **Unraid** – flexible and user-friendly but lacks ZFS-native integrity
+- **Linux ZFS Server** – powerful but requires manual configuration and lacks TrueNAS UI/tools
+- **Windows Server Storage Spaces** – adequate but weaker integrity model and complex licensing
+- **Local Proxmox Disks Only** – no centralization; poor for redundancy and backups
+
+---
+
 ## ADR-###: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
