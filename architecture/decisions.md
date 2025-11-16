@@ -84,7 +84,57 @@ Deploy Ubuntu Server LTS as a VM within Proxmox with allocated resources based o
 - Bare-metal deployment for performance
 
 ---
-## ADR-003: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
+# Architecture Decision Records
+
+## ADR-003: Deploy pfSense as Primary Firewall & Network Segmentation Platform (2025-10-28)
+
+### Status
+Accepted
+
+### Context
+- The home lab needs a dedicated, enterprise-grade firewall to manage VLAN segmentation, IDS/IPS, VPN access, DNS filtering, and traffic shaping.
+- Existing routers (ISP or consumer-grade) lack adequate visibility, logging, and granular security controls.
+- A full-featured firewall is required to support lab environments, security research, remote access (Tailscale/OpenVPN), and isolation of test networks.
+
+### Options Considered
+- Deploy pfSense CE/Plus on dedicated hardware or as a Proxmox VM
+- Deploy OPNsense
+- Use a consumer router with third-party firmware (OpenWRT/DD-WRT)
+- Continue using ISP-provided gateway/router
+
+### Decision
+Deploy pfSense as the primary firewall on dedicated hardware (or virtualized with proper NIC passthrough) to enable network segmentation, monitoring, and advanced security controls.
+
+### Rationale
+**Pros:**
+- Mature, stable, and widely adopted firewall platform
+- Strong VLAN support for segmentation of production, lab, IoT, DMZ, and testing networks
+- Built-in VPN support (WireGuard, OpenVPN, IPsec)
+- IDS/IPS options (Snort or Suricata)
+- Advanced NAT, firewall rules, DHCP, DNS Resolver/Forwarder, and traffic shaping
+- Works well with Proxmox via virtIO or NIC passthrough
+- Extensive official documentation and long-term support
+
+**Cons:**
+- Steeper learning curve for advanced configurations
+- Requires multiple NICs or careful virtual NIC configuration
+- Some enhanced features require pfSense Plus or Netgate hardware
+- Heavier UI/management overhead compared to minimal solutions
+
+### Consequences
+- Enhanced security posture and visibility across the home lab
+- Fully isolated and segmented VLAN architecture
+- Ability to simulate enterprise-grade network architecture
+- Centralized management of firewall rules, DNS, VPN, and logging
+- Higher hardware usage if running virtualized; requires proper tuning
+
+### Alternatives Considered
+- OPNsense
+- OpenWRT
+- ISP Router
+- Untangle / Sophos XG
+---
+## ADR-004: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
 Accepted
