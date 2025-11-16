@@ -325,6 +325,61 @@ Deploy **Wazuh** as the primary security monitoring, log aggregation, and SIEM-s
 
 ---
 
+# Architecture Decision Records
+
+## ADR-007: Deploy Tailscale for Zero-Trust Remote Access to Home Lab (YYYY-MM-DD)
+
+### Status
+Accepted
+
+### Context
+- Secure remote access is required to manage pfSense, Proxmox, TrueNAS, Wazuh, and the Linux Mint admin workstation when away from the home network.
+- Traditional VPN solutions (OpenVPN, WireGuard manually, IPsec) require firewall exposure, port forwarding, and ongoing maintenance.
+- The solution must support zero-trust principles, automatic key rotation, device identity, and minimal attack surface.
+- Access must work from mobile devices, laptops, and remote networks without exposing services publicly.
+
+### Options Considered
+- Tailscale (WireGuard-based zero-trust mesh VPN)
+- Manually configured WireGuard on pfSense
+- OpenVPN on pfSense or Linux
+- Cloudflare Tunnel / ZeroTier
+- No remote access (local-only management)
+
+### Decision
+Deploy **Tailscale** as the primary zero-trust remote access solution for all administrative entry points in the home lab.
+
+### Rationale
+**Pros:**
+- Zero ports exposed to the internet; no attack surface
+- Simple authentication using existing identity providers (Google, Microsoft, etc.)
+- Automatic key rotation and device identity trust model
+- Works natively on pfSense, Proxmox, Linux Mint, Windows, Android, iOS
+- Built-in ACLs to restrict access (e.g., allow Mint → pfSense only)
+- Fast and lightweight due to WireGuard transport
+- MagicDNS simplifies internal hostname resolution
+- Ideal for secure admin-only tunnels
+
+**Cons:**
+- Relies on a third-party coordination server (Tailscale control plane)
+- Some advanced features require paid tiers
+- If Tailscale is down, remote access becomes unavailable
+- Not ideal for publicly exposing services (it is not a reverse proxy)
+
+### Consequences
+- Provides secure remote access to pfSense, Proxmox, Wazuh, TrueNAS, admin workstation, and lab services
+- Reduces operational overhead associated with manual VPN configuration
+- Strong zero-trust model protects administrative interfaces from internet exposure
+- Management workflows can occur safely from mobile or laptop devices anywhere
+- Adds dependency on the Tailscale cloud control plane for coordination
+
+### Alternatives Considered
+- Manually managed **WireGuard** tunnels on pfSense (more control, more maintenance, exposed ports)
+- **OpenVPN** on pfSense (stable but slower and requires more configuration)
+- **ZeroTier** (similar features but slower growth and smaller ecosystem)
+- **Cloudflare Tunnel** (great for web services but not for general network access)
+
+---
+
 ## ADR-###: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
