@@ -39,8 +39,52 @@ Selected Proxmox VE for virtualization platform.
 - **XCP-ng:** Similar to Proxmox but smaller community
 
 ---
+# Architecture Decision Records
 
-## ADR-002: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
+## ADR-002: Add Ubuntu Server to Home Lab Infrastructure (2025-10-27)
+
+### Status
+Accepted
+
+### Context
+- A dedicated Linux server is needed to support containerized workloads, automation services, monitoring tools, and security-focused labs.
+- Current infrastructure includes Proxmox hosts, Windows system, and several service VMs.
+- Adding an Ubuntu Server VM provides a stable, standardized environment for Linux-based services.
+- Ubuntu Server LTS offers long-term support and excellent compatibility with automation and security tooling.
+
+### Options Considered
+- Deploy Ubuntu Server LTS as a VM inside Proxmox
+- Use Debian, Rocky Linux, AlmaLinux
+- Continue relying on existing mixed OS environments
+
+### Decision
+Deploy Ubuntu Server LTS as a VM within Proxmox with allocated resources based on the intended service role.
+
+### Rationale
+**Pros:**
+- Stable, popular, and widely supported in enterprise environments
+- Excellent package ecosystem and documentation
+- Integrates cleanly with Proxmox (templates, snapshots, backups)
+- Easier maintenance compared to some alternatives
+
+**Cons:**
+- Slight performance overhead due to virtualization
+- Requires periodic updates and security maintenance
+- Additional resource consumption on the host
+
+### Consequences
+- Standardized Linux base for automation and security tools
+- Easier replication via Proxmox templates
+- Improved isolation and organization of services
+- Minor increase in Proxmox resource usage
+
+### Alternatives Considered
+- Debian
+- Rocky Linux / AlmaLinux
+- Bare-metal deployment for performance
+
+---
+## ADR-003: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
 Accepted
