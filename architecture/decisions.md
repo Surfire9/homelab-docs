@@ -243,6 +243,60 @@ Deploy **TrueNAS** as the central storage and backup appliance using ZFS with re
 
 ---
 
+# Architecture Decision Records
+
+## ADR-006: Deploy Wazuh as Centralized Security Monitoring and SIEM Platform (YYYY-MM-DD)
+
+### Status
+Accepted
+
+### Context
+- The home lab requires a centralized security monitoring solution to track events, detect anomalies, and consolidate logs from servers, network devices, and security appliances.
+- Existing logging is fragmented across Proxmox, pfSense, Linux VMs, and application containers, making correlation and alerting difficult.
+- A SIEM-like tool is needed to support security practice, incident response training, and compliance-focused workflows.
+- Wazuh provides host intrusion detection, file integrity monitoring, vulnerability detection, log aggregation, and Elastic-based dashboards in a unified platform.
+
+### Options Considered
+- Deploy Wazuh (Manager + Dashboard)
+- Use the ELK Stack (Elastic, Logstash, Kibana) alone
+- Use Graylog
+- Use Splunk Free / Community edition
+- Rely on pfSense + system logs alone
+
+### Decision
+Deploy **Wazuh** as the primary security monitoring, log aggregation, and SIEM-style platform within the home lab for centralized visibility and incident detection.
+
+### Rationale
+**Pros:**
+- Comprehensive security platform combining SIEM, HIDS, FIM, vulnerability detection, and compliance modules
+- Native agent support for Linux, Windows, macOS, and containers
+- Tight integration with Elastic stack for powerful search and visualization
+- Unified dashboard for alerts, events, vulnerabilities, and system inventory
+- Free and open-source with strong documentation
+- Supports pfSense, Proxmox, TrueNAS, and Linux agent-based monitoring
+- Ideal for cybersecurity study and hands-on blue-team practice
+
+**Cons:**
+- Resource-heavy (Elastic stack requires CPU/RAM tuning)
+- More complex initial setup compared to simple log collectors
+- Requires ongoing maintenance of indices, dashboards, and agent versions
+- Generates large volumes of logs; needs proper storage planning
+
+### Consequences
+- Centralized visibility of events across the entire home lab environment
+- Strong foundation for security analysis, alerting, and incident response practice
+- Ability to simulate and analyze real-world attack patterns
+- Increased resource usage within the Wazuh VM and Elastic components
+- Requires tuning to prevent excessive alert noise or unnecessary logging
+
+### Alternatives Considered
+- **Elastic Stack alone** – powerful but lacks built-in security modules without heavy customization
+- **Graylog** – simpler but weaker security and compliance feature set
+- **Splunk Free** – excellent UI but heavily limited in free-tier data ingestion
+- **Native system logs** – insufficient for correlation, security detection, or centralized monitoring
+
+---
+
 ## ADR-###: Deploy Home Assistant OS for Home Automation Platform (2025-11-15)
 
 ### Status
