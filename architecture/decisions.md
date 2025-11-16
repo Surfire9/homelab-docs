@@ -327,7 +327,7 @@ Deploy **Wazuh** as the primary security monitoring, log aggregation, and SIEM-s
 
 # Architecture Decision Records
 
-## ADR-007: Deploy Tailscale for Zero-Trust Remote Access to Home Lab (YYYY-MM-DD)
+## ADR-007: Deploy Tailscale for Zero-Trust Remote Access to Home Lab (2025-11-15)
 
 ### Status
 Accepted
